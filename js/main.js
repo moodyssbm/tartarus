@@ -130,16 +130,6 @@ function getTile() {
 
 let map = [];
 
-for(i=0; i!=12; i++) {
-    map.push(new Array());
-}
-
-for(i=0; i!=12; i++) {
-    for(j=0; j!=12; j++) {
-        map[i].push(getTile());
-    }
-}
-
 function drawMap() {
     let x = 0;
     let y = 0;
@@ -153,15 +143,16 @@ function drawMap() {
     }
 }
 
-
-player.pos.y = Math.floor(Math.random() * 12);
-
-function makePath() {
-    map[player.pos.y][player.pos.x] = downStairs;
+function makePath(side) {
+    map[player.pos.y][0] = downStairs;
     downStairs.pos.y = player.pos.y;
-    player.pos.x++;
+    if(side == 0) {
+        player.pos.x++;
+    } else {
+        player.pos.x--;
+    }
 
-    let pathX = player.pos.x;
+    let pathX = 1;
     let pathY = player.pos.y;
 
     while(pathX != 12) {
@@ -196,10 +187,33 @@ function makePath() {
     }
 }
 
-makePath();
-drawMap();
+function rollFloor(side) {
+    map = [];
 
-drawTile(player.pos.x, player.pos.y, player.sprite);
+    for(i=0; i!=12; i++) {
+        map.push(new Array());
+    }
+
+    for(i=0; i!=12; i++) {
+        for(j=0; j!=12; j++) {
+            map[i].push(getTile());
+        }
+    }
+
+    player.pos.y = Math.floor(Math.random() * 12);
+    player.pos.x = side;
+
+    makePath(side);
+    drawMap();
+
+    if(side != 0) {
+        player.pos.y = upStairs.pos.y;
+    }
+
+    drawTile(player.pos.x, player.pos.y, player.sprite);
+}
+
+rollFloor(0);
 
 addEventListener("keydown", function(event) {
     if(event.keyCode == 68 && map[player.pos.y][player.pos.x+1].passable == true) {
@@ -230,5 +244,11 @@ addEventListener("keydown", function(event) {
             player.pos.y++
         }
         drawTile(player.pos.x, player.pos.y, player.sprite);
+    }
+
+    if(player.pos.x == upStairs.pos.x && player.pos.y == upStairs.pos.y) {
+        rollFloor(0);
+    } else if(player.pos.x == downStairs.pos.x && player.pos.y == downStairs.pos.y) {
+        rollFloor(11);
     }
 },false);
