@@ -173,6 +173,9 @@ function makePath() {
             map[pathY][pathX] = floor;
         }
         let nextStep = Math.floor(Math.random() * 3);
+        if(map[pathY][pathX] == upStairs) {
+            nextStep = 0;
+        }
         switch(nextStep) {
             case 0:
                 pathX++;
