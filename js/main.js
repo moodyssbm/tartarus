@@ -155,13 +155,13 @@ function makePath(side) {
     let pathX = 1;
     let pathY = player.pos.y;
 
-    while(pathX != 12) {
+    while(pathX < 12) {
+        map[pathY][pathX] = floor;
+
         if(pathX == 11) {
             upStairs.pos.x = pathX;
             upStairs.pos.y = pathY;
             map[pathY][pathX] = upStairs;
-        } else {
-            map[pathY][pathX] = floor;
         }
         let nextStep = Math.floor(Math.random() * 3);
         if(map[pathY][pathX] == upStairs) {
@@ -173,16 +173,16 @@ function makePath(side) {
                 break;
             case 1:
                 pathY++;
-                if(pathY == 13) {
+                if(pathY == 12) {
                     pathY--;
-                    pathX++;
                 }
+                break;
             case 2:
                 pathY--;
                 if(pathY == -1) {
                     pathY++;
-                    pathX++;
                 }
+                break;
         }
     }
 }
