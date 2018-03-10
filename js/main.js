@@ -26,12 +26,12 @@ drawHUD();
 
 let wall = {
     passable: false,
-    sprite: []
+    sprite: sprites.wall
 };
 
 let floor = {
     passable: true,
-    sprite: []
+    sprite: sprites.floor
 };
 
 let downStairs = {
@@ -39,20 +39,7 @@ let downStairs = {
         x: 0,
         y: 0
     },
-    sprite: [
-        [3,3,3,3,3,3,3,3,3,3,3,3],
-        [3,3,3,3,3,3,3,3,3,3,3,3],
-        [3,3,3,3,3,3,3,3,3,3,3,3],
-        [3,3,3,3,3,3,3,3,3,0,0,3],
-        [3,3,3,3,3,3,0,0,3,0,0,3],
-        [3,3,3,0,0,3,0,0,3,0,0,3],
-        [3,0,3,0,0,3,0,0,3,0,0,3],
-        [3,0,3,0,0,3,0,0,3,0,0,3],
-        [3,0,3,0,0,3,0,0,3,0,0,3],
-        [3,0,3,0,0,3,0,0,3,0,0,3],
-        [3,0,3,0,0,3,0,0,3,0,0,3],
-        [3,3,3,3,3,3,3,3,3,3,3,3]
-    ],
+    sprite: sprites.downStairs,
     passable: true
 }
 
@@ -61,55 +48,21 @@ let upStairs = {
         x: 11,
         y: 0
     },
-    sprite: [
-        [0,0,0,0,0,0,0,0,0,3,3,3],
-        [0,0,0,0,0,0,3,3,3,3,0,0],
-        [0,0,0,3,3,3,3,0,0,3,0,0],
-        [3,3,3,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,0,0,3,0,0,3,0,0,3,0,0],
-        [3,3,3,3,3,3,3,3,3,3,3,3],
-    ],
+    sprite: sprites.upStairs,
     passable: true
 }
 
 let player = {
-    sprite: [
-        [0,0,0,3,3,3,3,3,3,0,0,0],
-        [0,0,0,3,0,3,3,0,3,0,0,0],
-        [3,0,0,3,3,3,3,3,3,0,0,0],
-        [3,0,0,0,0,3,3,0,0,0,0,0],
-        [3,0,3,3,3,3,3,3,3,3,0,0],
-        [3,3,0,0,0,3,3,0,0,0,3,0],
-        [3,0,0,0,0,3,3,0,0,0,0,3],
-        [0,0,0,0,0,3,3,0,0,0,0,0],
-        [0,0,0,3,3,3,3,3,3,0,0,0],
-        [0,0,3,3,0,0,0,0,3,3,0,0],
-        [0,3,3,0,0,0,0,0,0,3,3,0],
-        [3,3,0,0,0,0,0,0,0,0,3,3]
-    ],
+    sprite: sprites.player,
     pos: {
         x: 0,
         y: 0
     }
 };
 
-for(i=0; i!=12; i++) {
-    wall.sprite.push([3,3,3,3,3,3,3,3,3,3,3,3]);
-}
-
-for(i=0; i!=12; i++) {
-    floor.sprite.push([0,0,0,0,0,0,0,0,0,0,0,0]);
-}
-
 function drawTile(x, y, tile) {
-    x *= 12;
-    y *= 12;
+    x *= 8;
+    y *= 8;
 
     for(i=0; i!=tile.length; i++) {
         for(j=0; j!=tile[i].length; j++) {
@@ -133,8 +86,8 @@ let map = [];
 function drawMap() {
     let x = 0;
     let y = 0;
-    while(y != 12) {
-        while(x != 12) {
+    while(y != 18) {
+        while(x != 18) {
             drawTile(x,y,map[y][x].sprite);
             x++
         }
@@ -155,10 +108,10 @@ function makePath(side) {
     let pathX = 1;
     let pathY = player.pos.y;
 
-    while(pathX < 12) {
+    while(pathX < 18) {
         map[pathY][pathX] = floor;
 
-        if(pathX == 11) {
+        if(pathX == 17) {
             upStairs.pos.x = pathX;
             upStairs.pos.y = pathY;
             map[pathY][pathX] = upStairs;
@@ -173,7 +126,7 @@ function makePath(side) {
                 break;
             case 1:
                 pathY++;
-                if(pathY == 12) {
+                if(pathY == 18) {
                     pathY--;
                 }
                 break;
@@ -190,17 +143,17 @@ function makePath(side) {
 function rollFloor(side) {
     map = [];
 
-    for(i=0; i!=12; i++) {
+    for(i=0; i!=18; i++) {
         map.push(new Array());
     }
 
-    for(i=0; i!=12; i++) {
-        for(j=0; j!=12; j++) {
+    for(i=0; i!=18; i++) {
+        for(j=0; j!=18; j++) {
             map[i].push(getTile());
         }
     }
 
-    player.pos.y = Math.floor(Math.random() * 12);
+    player.pos.y = Math.floor(Math.random() * 18);
     player.pos.x = side;
 
     makePath(side);
@@ -219,14 +172,14 @@ addEventListener("keydown", function(event) {
     if(event.keyCode == 68 && map[player.pos.y][player.pos.x+1].passable == true) {
         drawTile(player.pos.x, player.pos.y, map[player.pos.y][player.pos.x].sprite);
         player.pos.x++;
-        if(player.pos.x == 12) {
+        if(player.pos.x == 18) {
             player.pos.x--;
         }
         drawTile(player.pos.x, player.pos.y, player.sprite);
     } else if(event.keyCode == 83 && map[player.pos.y+1][player.pos.x].passable == true) {
         drawTile(player.pos.x, player.pos.y, map[player.pos.y][player.pos.x].sprite);
         player.pos.y++;
-        if(player.pos.y == 12) {
+        if(player.pos.y == 18) {
             player.pos.y--;
         }
         drawTile(player.pos.x, player.pos.y, player.sprite);
@@ -249,6 +202,6 @@ addEventListener("keydown", function(event) {
     if(player.pos.x == upStairs.pos.x && player.pos.y == upStairs.pos.y) {
         rollFloor(0);
     } else if(player.pos.x == downStairs.pos.x && player.pos.y == downStairs.pos.y) {
-        rollFloor(11);
+        rollFloor(17);
     }
 },false);
